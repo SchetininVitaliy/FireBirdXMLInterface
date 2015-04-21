@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+  <Transactions>
+    <Transaction>2015.04.21 20:48:10.705,C:\FireBirdXMLInterface\Project2.dproj=C:\Users\vitaliy\Documents\Embarcadero\Studio\Projects\Project2.dproj</Transaction>
+    <Transaction>2015.04.21 20:53:28.700,=C:\FireBirdXMLInterface\Unit1.pas</Transaction>
+    <Transaction>2015.04.21 20:54:23.422,=C:\FireBirdXMLInterface\Unit1.pas</Transaction>
+    <Transaction>2015.04.21 20:57:02.201,C:\FireBirdXMLInterface\TSQLTable.pas=C:\FireBirdXMLInterface\Unit1.pas</Transaction>
+    <Transaction>2015.04.21 20:58:41.830,C:\FireBirdXMLInterface\SQLTable.pas=C:\FireBirdXMLInterface\TSQLTable.pas</Transaction>
+    <Transaction>2015.04.21 21:04:04.673,C:\FireBirdXMLInterface\FireBirdXML.dproj=C:\FireBirdXMLInterface\Project2.dproj</Transaction>
+    <Transaction>2015.04.21 21:04:35.682,C:\FireBirdXMLInterface\FireBird2XML.dproj=C:\FireBirdXMLInterface\FireBirdXML.dproj</Transaction>
+  </Transactions>
+</BorlandProject>
