@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>1899.12.30 00:00:00.000.973,C:\Users\vitaliy\Documents\Embarcadero\Studio\Projects\Project3_TLB.pas=C:\Users\vitaliy\Documents\FireBirdXMLInterface\Project3_TLB.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.604,=C:\Users\vitaliy\Documents\Embarcadero\Studio\Projects\Project3_TLB.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.981,C:\Users\vitaliy\Documents\FireBirdXMLInterface\Project3_TLB.pas=C:\Users\vitaliy\Documents\FireBirdXMLInterface\FireBird2XML_COM_TLB.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.356,C:\Users\vitaliy\Documents\FireBirdXMLInterface\Project3.dproj=C:\Users\vitaliy\Documents\FireBirdXMLInterface\FreBird2XML_COM.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.595,=C:\Users\vitaliy\Documents\Embarcadero\Studio\Projects\Project3.ridl</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.883,C:\Users\vitaliy\Documents\Embarcadero\Studio\Projects\Project3.dproj=C:\Users\vitaliy\Documents\FireBirdXMLInterface\Project3.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.513,=C:\Users\vitaliy\Documents\FireBirdXMLInterface\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.936,C:\Users\vitaliy\Documents\Embarcadero\Studio\Projects\Project3.ridl=C:\Users\vitaliy\Documents\FireBirdXMLInterface\FireBird2XML_COM.ridl</Transaction>
+    <Transaction>2015.04.22 11:36:50.461,C:\Users\vitaliy\Documents\FireBirdXMLInterface\SQLTable_COM.pas=C:\Users\vitaliy\Documents\FireBirdXMLInterface\Unit1.pas</Transaction>
+  </Transactions>
+</BorlandProject>

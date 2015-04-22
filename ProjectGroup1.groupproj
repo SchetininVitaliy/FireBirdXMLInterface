@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{4B1F768E-9C67-434A-A9A3-11E455756B97}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="FreBird2XML_COM.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Application.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="FreBird2XML_COM">
+        <MSBuild Projects="FreBird2XML_COM.dproj"/>
+    </Target>
+    <Target Name="FreBird2XML_COM:Clean">
+        <MSBuild Projects="FreBird2XML_COM.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="FreBird2XML_COM:Make">
+        <MSBuild Projects="FreBird2XML_COM.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Application">
+        <MSBuild Projects="Application.dproj"/>
+    </Target>
+    <Target Name="Application:Clean">
+        <MSBuild Projects="Application.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Application:Make">
+        <MSBuild Projects="Application.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="FreBird2XML_COM;Application"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="FreBird2XML_COM:Clean;Application:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="FreBird2XML_COM:Make;Application:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

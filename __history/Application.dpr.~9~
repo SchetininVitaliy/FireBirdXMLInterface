@@ -1,0 +1,22 @@
+program Application;
+
+{$APPTYPE CONSOLE}
+
+{$R *.res}
+
+uses
+  System.SysUtils,
+  FireBird2XML_COM_TLB in '..\Embarcadero\Studio\16.0\Imports\FireBird2XML_COM_TLB.pas',
+  XMLDoc, XMLIntf, Variants;
+
+var
+ Doc: IXMLDocument;
+ Node: IXMLNode;
+ S: string;
+
+begin
+  Doc := TXMLDocument.Create(nil);
+  Doc.LoadFromFile('table1.xml');
+  Node := Doc.DocumentElement;
+  S:= VarToStr(Node.Attributes['TABLE_NAME']);
+end.

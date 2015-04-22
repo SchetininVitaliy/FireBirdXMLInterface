@@ -13,8 +13,7 @@ library FireBird2XML;
 uses
   System.SysUtils,
   System.Classes,
-  SQLTable in 'SQLTable.pas';
-
+  SQLTable in '.\SQLTable.pas';
 {$R *.res}
 
 begin
