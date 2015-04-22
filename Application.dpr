@@ -16,7 +16,15 @@ uses
 
 var
   xmlCreator:TXMLSQLTableCreator;
+  sqlTable:TSQLTable;
 begin
-    xmlCreator := TXMLSQLTableCreator.Create('table1.xml');
+  xmlCreator := TXMLSQLTableCreator.Create();
+  sqlTable:=TSQLTable.Create;
+  xmlCreator.CreateTableFromXML('table1.xml',sqlTable);
+  sqlTable.Print();
+  xmlCreator.Destroy;
 
+  xmlCreator := TXMLSQLTableCreator.Create();
+  xmlCreator.CreateXMLFromTable('table2.xml',sqlTable);
+  xmlCreator.Destroy;
 end.

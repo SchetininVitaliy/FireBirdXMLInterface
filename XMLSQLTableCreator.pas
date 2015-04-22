@@ -5,23 +5,24 @@ interface
     SQLTableCreator,
     SQLTable,
     XMLDoc,
-    XMLIntf;
+    XMLIntf,
+    xmldom,
+    Classes,
+    Variants;
 type
   TXMLSQLTableCreator = class(TSQLTableCreator)
-    fFileName:string;
     fXMLDocument: IXMLDocument;
 
-    procedure CreateTable(var table:TSQLTable);
-    constructor Create(fileName:string);
+    procedure CreateTableFromXML(fileName:string; var table:TSQLTable);
+    procedure CreateXMLFromTable(fileName:string; table:TSQLTable);
+    constructor Create();
     destructor Destroy;
   end;
 implementation
 
-  constructor TXMLSQLTableCreator.Create(fileName:string);
+  constructor TXMLSQLTableCreator.Create();
   begin
-      fFileName:=fileName;
       fXMLDocument := TXMLDocument.Create(nil);
-      fXMLDocument.LoadFromFile(fFileName);
   end;
 
   destructor TXMLSQLTableCreator.Destroy;
@@ -29,8 +30,128 @@ implementation
 
   end;
 
-   procedure TXMLSQLTableCreator.CreateTable(var table:TSQLTable);
-   begin
+  procedure TXMLSQLTableCreator.CreateTableFromXML(fileName:string; var table:TSQLTable);
+  var
+    i_col, i_row, i_pk_col:integer;
+    tableNode: IXMLNode;
+    tableColsNode: IXMLNode;
+    tableColNode: IXMLNode;
+    tableRowNodes: IXMLNodeList;
+    tableRowNode: IXMLNode;
+    tableConstainNode: IXMLNode;
+    tablePrimaryKeyNode: IXMLNode;
+    row: TStringList;
+  begin
+      fXMLDocument.LoadFromFile(fileName);
+      //todo - обработка исключений
+     //Инициализация опсания таблицы
+     tableNode :=  fXMLDocument.DocumentElement;
+     table.fTableName :=  tableNode.Attributes['TABLE_NAME'];
+     table.fTableDescription := tableNode.Attributes['TABLE_DESCR'];
+     tableColsNode := tableNode.ChildNodes['TABLE_COLUMNES'];
+     //Создание колонок таблицы
+     for i_col := 0 to tableColsNode.ChildNodes.Count -1 do
+     begin
+         tableColNode :=  tableColsNode.ChildNodes[i_col];
+         table.AddColumn(tableColNode.Attributes['ATTR_NAME'],
+                          tableColNode.Attributes['ATTR_DESCR'],
+                          tableColNode.Attributes['ATTR_TYPE']);
+     end;
+     //Добавление первичного ключа
+     tableConstainNode := tableNode.ChildNodes['TABLE_CONSTR'];
+     tablePrimaryKeyNode := tableConstainNode.ChildNodes['PRIMARY_KEY'];
+     for i_pk_col := 0 to tablePrimaryKeyNode.ChildNodes.Count-1 do
+     begin
+        table.AddPrimaryKeyColumn(VarToStr(tablePrimaryKeyNode.ChildNodes[i_pk_col].Attributes['ATTR_NAME']));
+     end;
 
-   end;
+     //Добавление строк в таблицу
+     tableRowNodes :=  tableNode.ChildNodes;
+     for i_row := 0 to tableRowNodes.Count-1 do
+     begin
+      if (tableRowNodes[i_row].NodeName = 'TABLE_ROW') then
+      begin
+        row := TStringList.Create;
+        tableRowNode := tableRowNodes[i_row];
+        for i_col := 0 to tableRowNode.ChildNodes.Count-1 do
+        begin
+            row.Add(VarToStr(tableRowNode.ChildNodes[i_col].Attributes['ATTR_VALUE']));
+        end;
+        table.AddRow(row);
+        row.Destroy;
+      end;
+     end;
+
+  end;
+
+  procedure TXMLSQLTableCreator.CreateXMLFromTable(fileName:string; table:TSQLTable);
+  var
+    iXml: IDOMDocument;
+    iTable, iTableColumns,iTableColumn, iTableConstrain,
+    iPrimaryKey, iPrimAttr,  iAttribute, iTableRow: IDOMNode;
+    i_col, i_row: Integer;
+    row: TStringList;
+  begin
+      fXMLDocument.Active := true;
+      iXml := fXMLDocument.DOMDocument;
+      fXMLDocument.Encoding := 'utf-8';
+
+      //Создание Узла Table
+      iTable := iXml.appendChild(iXml.createElement('TABLE'));
+      iAttribute := iXml.createAttribute('TABLE_NAME');
+      iAttribute.nodeValue := table.fTableName;
+      iTable.attributes.setNamedItem(iAttribute);
+      iAttribute := iXml.createAttribute('TABLE_DESCR');
+      iAttribute.nodeValue := table.fTableDescription;
+      iTable.attributes.setNamedItem(iAttribute);
+
+      //Выгрузка информации о колонках
+      iTableColumns := iTable.appendChild(iXml.createElement('TABLE_COLUMNES'));
+      for i_col := 0 to table.ColumnCount-1 do
+      begin
+        iTableColumn :=  iTableColumns.appendChild(iXml.createElement('TABLE_COLUMN'));
+        iAttribute := iXml.createAttribute('ATTR_NAME');
+        iAttribute.nodeValue := table.GetColumnName(i_col);
+        iTableColumn.attributes.setNamedItem(iAttribute);
+        iAttribute := iXml.createAttribute('ATTR_DESCR');
+        iAttribute.nodeValue := table.GetColumnDescription(i_col);
+        iTableColumn.attributes.setNamedItem(iAttribute);
+        iAttribute := iXml.createAttribute('ATTR_TYPE');
+        iAttribute.nodeValue := table.GetColumnType(i_col);
+        iTableColumn.attributes.setNamedItem(iAttribute);
+      end;
+
+      //Выгрузка информации о констрейнах
+      iTableConstrain:= iTable.appendChild(iXml.createElement('TABLE_CONSTR'));
+      iPrimaryKey := iTableConstrain.appendChild(iXml.createElement('PRIMARY_KEY'));
+      for i_col := 0 to table.PrimaryKeyColCount()-1 do
+      begin
+        iPrimAttr := iPrimaryKey.appendChild(iXml.createElement('PRIMARY_ATTR'));
+        iAttribute := iXml.createAttribute('ATTR_NAME');
+        iAttribute.nodeValue := table.GetPrimaryKeyCol(i_col);
+        iPrimAttr.attributes.setNamedItem(iAttribute);
+      end;
+
+      //Выгрузка информации о строках
+      for i_row := 0 to table.RowCount()-1 do
+      begin
+        row := TStringList.Create;
+        iTableRow := iTable.appendChild(iXml.createElement('TABLE_ROW'));
+        table.GetRow(i_row, row);
+          for i_col := 0 to table.ColumnCount()-1 do
+          begin
+              iTableColumn := iTableRow.appendChild(iXml.createElement('COLUMN'));
+              iAttribute := iXml.createAttribute('ATTR_NAME');
+              iAttribute.nodeValue := table.GetColumnName(i_col);
+              iTableColumn.attributes.setNamedItem(iAttribute);
+              iAttribute := iXml.createAttribute('ATTR_VALUE');
+              iAttribute.nodeValue := table.GetContent(i_row,i_col);
+              iTableColumn.attributes.setNamedItem(iAttribute);
+          end;
+        row.Destroy;
+      end;
+
+
+      fXMLDocument.SaveToFile(fileName);
+  end;
 end.
