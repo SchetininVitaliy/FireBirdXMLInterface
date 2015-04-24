@@ -24,34 +24,25 @@ var
   dbCreator:TDBSQLTableCreator;
   sqlTable:TSQLTable;
 begin
-  // XML -> DB
   xmlCreator := TXMLSQLTableCreator.Create();
   sqlTable:=TSQLTable.Create;
   xmlCreator.CreateTableFromXML('table1.xml',sqlTable);
   sqlTable.Print();
-  dbCreator := TDBSQLTableCreator.Create('C:\Users\vitaliy\Documents\TEST.FDB',
-                                          'SYSDBA',
-                                          'masterkey',
-                                          'utf8');
-  dbCreator.CreateDBTableFromTable('table1', sqlTable);
-  sqlTable.Destroy;
-  dbCreator.Destroy;
   xmlCreator.Destroy;
 
+  xmlCreator := TXMLSQLTableCreator.Create();
+  xmlCreator.CreateXMLFromTable('table2.xml',sqlTable);
+  xmlCreator.Destroy;
+  sqlTable.Destroy;
 
-  //DB->XML
   dbCreator := TDBSQLTableCreator.Create('C:\Users\vitaliy\Documents\TEST.FDB',
                                           'SYSDBA',
                                           'masterkey',
                                           'utf8');
 
   sqlTable:=TSQLTable.Create;
-  dbCreator.CreateTableFromDB('table1',sqlTable);
+  dbCreator.CreateTableFromDB('NEW_TABLE',sqlTable);
   sqlTable.Print;
-  xmlCreator := TXMLSQLTableCreator.Create();
-  xmlCreator.CreateXMLFromTable('table2.xml',sqlTable);
-
-  xmlCreator.Destroy;
-  dbCreator.Destroy;
+  dbCreator.CreateDBTableFromTable('NEW_TABLE1', sqlTable);
   sqlTable.Destroy;
 end.

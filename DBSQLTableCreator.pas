@@ -8,7 +8,8 @@ uses
   IBX.IBDatabase,
   IBX.IBQuery,
   IBX.IBCustomDataSet,
-  SQLTable;
+  SQLTable,
+  SysUtils ;
 procedure StrUpcase(var s : string);
 
 type
@@ -50,6 +51,7 @@ implementation
       row : TStringList;
    begin
       fDB.Open();
+      StrUpcase(tableName);
       table.fTableName := tableName;
       //Выборка информации о колокнках таблицы
       transCols := TIBTransaction.Create(nil);
@@ -77,9 +79,9 @@ implementation
       //todo обрабока исключений
       //todo достать description. в том числе и для table
       while not ibdsCols.Eof do begin
-         table.AddColumn(ibdsCols.FieldByName('column_name').AsString,
+         table.AddColumn(Trim(ibdsCols.FieldByName('column_name').AsString),
                           '',
-                        ibdsCols.FieldByName('data_type').AsString);
+                        Trim(ibdsCols.FieldByName('data_type').AsString));
          ibdsCols.Next;
       end;
       ibdsCols.Destroy;
@@ -101,7 +103,7 @@ implementation
        while not ibdsRows.Eof do begin
           row.Clear;
           for i_col := 0 to ibdsRows.FieldCount - 1 do
-             row.Add(ibdsRows.Fields[i_col].AsString);
+             row.Add(Trim(ibdsRows.Fields[i_col].AsString));
           table.AddRow(row);
           ibdsRows.Next;
       end;
