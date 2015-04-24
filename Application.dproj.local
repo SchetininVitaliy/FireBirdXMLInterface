@@ -1,14 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<Transactions>
-    <Transaction>1899.12.30 00:00:00.000.867,C:\Users\vitaliy\Documents\Embarcadero\Studio\Projects\Project2.dproj=C:\Users\vitaliy\Documents\Embarcadero\Studio\Projects\Application.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.634,=C:\Users\vitaliy\Documents\FireBirdXMLInterface\Unit2.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.476,C:\Users\vitaliy\Documents\FireBirdXMLInterface\SQLTableCreator.pas=C:\Users\vitaliy\Documents\FireBirdXMLInterface\Unit2.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.657,=C:\Users\vitaliy\Documents\FireBirdXMLInterface\Unit2.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.423,=C:\Users\vitaliy\Documents\FireBirdXMLInterface\Unit2.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.320,C:\Users\vitaliy\Documents\FireBirdXMLInterface\XMLSQLTableCreator.pas=C:\Users\vitaliy\Documents\FireBirdXMLInterface\Unit2.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.837,C:\Users\vitaliy\Documents\Embarcadero\Studio\Projects\Application.dproj=C:\Users\vitaliy\Documents\FireBirdXMLInterface\Application.dproj</Transaction>
-    <Transaction>2015.04.22 09:43:55.104,=C:\Users\vitaliy\Documents\Embarcadero\Studio\16.0\Imports\FireBird2XML_COM_TLB.pas</Transaction>
-    <Transaction>2015.04.22 11:07:06.657,=C:\Users\vitaliy\Documents\FireBirdXMLInterface\Unit2.pas</Transaction>
-    <Transaction>2015.04.22 11:07:29.935,C:\Users\vitaliy\Documents\FireBirdXMLInterface\SQLTable.pas=C:\Users\vitaliy\Documents\FireBirdXMLInterface\Unit2.pas</Transaction>
-    <Transaction>2015.04.22 11:12:06.423,=C:\Users\vitaliy\Documents\FireBirdXMLInterface\Unit2.pas</Transaction>
-    <Transaction>2015.04.22 11:12:26.476,C:\Users\vitaliy\Documents\FireBirdXMLInterface\SQLTableCreator.pas=C:\Users\vitaliy\Documents\FireBirdXMLInterface\Unit2.pas</Transaction>
-    <Transaction>2015.04.22 11:14:31.634,=C:\Users\vitaliy\Documents\FireBirdXMLInterface\Unit2.pas</Transaction>
-    <Transaction>2015.04.22 11:15:06.320,C:\Users\vitaliy\Documents\FireBirdXMLInterface\XMLSQLTableCreator.pas=C:\Users\vitaliy\Documents\FireBirdXMLInterface\Unit2.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.935,C:\Users\vitaliy\Documents\FireBirdXMLInterface\SQLTable.pas=C:\Users\vitaliy\Documents\FireBirdXMLInterface\Unit2.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.104,=C:\Users\vitaliy\Documents\Embarcadero\Studio\16.0\Imports\FireBird2XML_COM_TLB.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.867,C:\Users\vitaliy\Documents\Embarcadero\Studio\Projects\Project2.dproj=C:\Users\vitaliy\Documents\Embarcadero\Studio\Projects\Application.dproj</Transaction>
+    <Transaction>2015.04.23 15:56:48.178,=C:\Users\vitaliy\Documents\FireBirdXMLInterface\Unit1.pas</Transaction>
+    <Transaction>2015.04.23 15:57:08.825,C:\Users\vitaliy\Documents\FireBirdXMLInterface\DBSQLTableCreator.pas=C:\Users\vitaliy\Documents\FireBirdXMLInterface\Unit1.pas</Transaction>
   </Transactions>
 </BorlandProject>
