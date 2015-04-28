@@ -69,7 +69,7 @@ implementation
                           tableColNode.Attributes['ATTR_TYPE'],
                           tableColNode.Attributes['ATTR_LEN'],
                           tableColNode.Attributes['ATTR_DEFAULT'],
-                          tableColNode.Attributes['ATTR_NOTNULL']);
+                          StrToBool(tableColNode.Attributes['ATTR_NOTNULL']));
      end;
      //Добавление первичного ключа
      tableConstainNode := tableNode.ChildNodes['TABLE_CONSTR'];
@@ -135,6 +135,12 @@ implementation
         iTableColumn.attributes.setNamedItem(iAttribute);
         iAttribute := iXml.createAttribute('ATTR_LEN');
         iAttribute.nodeValue := IntToStr(table.GetColumnLen(i_col));
+        iTableColumn.attributes.setNamedItem(iAttribute);
+        iAttribute := iXml.createAttribute('ATTR_DEFAULT');
+        iAttribute.nodeValue := table.GetColumnDefault(i_col);
+        iTableColumn.attributes.setNamedItem(iAttribute);
+        iAttribute := iXml.createAttribute('ATTR_NOTNULL');
+        iAttribute.nodeValue := BoolToStr(table.GetColumnNotNull(i_col));
         iTableColumn.attributes.setNamedItem(iAttribute);
       end;
 
