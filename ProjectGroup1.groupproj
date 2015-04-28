@@ -3,10 +3,10 @@
         <ProjectGuid>{4B1F768E-9C67-434A-A9A3-11E455756B97}</ProjectGuid>
     </PropertyGroup>
     <ItemGroup>
-        <Projects Include="FreBird2XML_COM.dproj">
+        <Projects Include="Application.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="Application.dproj">
+        <Projects Include="FireBird2XML\FireBird2XML.dproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -17,15 +17,6 @@
             <Default.Personality/>
         </BorlandProject>
     </ProjectExtensions>
-    <Target Name="FreBird2XML_COM">
-        <MSBuild Projects="FreBird2XML_COM.dproj"/>
-    </Target>
-    <Target Name="FreBird2XML_COM:Clean">
-        <MSBuild Projects="FreBird2XML_COM.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="FreBird2XML_COM:Make">
-        <MSBuild Projects="FreBird2XML_COM.dproj" Targets="Make"/>
-    </Target>
     <Target Name="Application">
         <MSBuild Projects="Application.dproj"/>
     </Target>
@@ -35,14 +26,23 @@
     <Target Name="Application:Make">
         <MSBuild Projects="Application.dproj" Targets="Make"/>
     </Target>
+    <Target Name="FireBird2XML">
+        <MSBuild Projects="FireBird2XML\FireBird2XML.dproj"/>
+    </Target>
+    <Target Name="FireBird2XML:Clean">
+        <MSBuild Projects="FireBird2XML\FireBird2XML.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="FireBird2XML:Make">
+        <MSBuild Projects="FireBird2XML\FireBird2XML.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="FreBird2XML_COM;Application"/>
+        <CallTarget Targets="Application;FireBird2XML"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="FreBird2XML_COM:Clean;Application:Clean"/>
+        <CallTarget Targets="Application:Clean;FireBird2XML:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="FreBird2XML_COM:Make;Application:Make"/>
+        <CallTarget Targets="Application:Make;FireBird2XML:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

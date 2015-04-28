@@ -1,0 +1,7 @@
+[
+  uuid(4362FE38-15DC-4D6C-8065-673685848BF7),
+  version(1.0)
+]
+library Application
+{
+};
