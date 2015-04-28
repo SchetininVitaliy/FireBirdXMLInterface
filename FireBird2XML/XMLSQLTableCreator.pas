@@ -57,8 +57,8 @@ implementation
       //todo - обработка исключений
      //Инициализация опсания таблицы
      tableNode :=  fXMLDocument.DocumentElement;
-     table.fTableName :=  tableNode.Attributes['TABLE_NAME'];
-     table.fTableDescription := tableNode.Attributes['TABLE_DESCR'];
+     table.SetName(tableNode.Attributes['TABLE_NAME']);
+     table.SetDescription(tableNode.Attributes['TABLE_DESCR']);
      tableColsNode := tableNode.ChildNodes['TABLE_COLUMNES'];
      //Создание колонок таблицы
      for i_col := 0 to tableColsNode.ChildNodes.Count -1 do
@@ -113,10 +113,10 @@ implementation
       //Создание Узла Table
       iTable := iXml.appendChild(iXml.createElement('TABLE'));
       iAttribute := iXml.createAttribute('TABLE_NAME');
-      iAttribute.nodeValue := table.fTableName;
+      iAttribute.nodeValue := table.GetName;
       iTable.attributes.setNamedItem(iAttribute);
       iAttribute := iXml.createAttribute('TABLE_DESCR');
-      iAttribute.nodeValue := table.fTableDescription;
+      iAttribute.nodeValue := table.GetDescription;
       iTable.attributes.setNamedItem(iAttribute);
 
       //Выгрузка информации о колонках
@@ -140,7 +140,7 @@ implementation
         iAttribute.nodeValue := table.GetColumnDefault(i_col);
         iTableColumn.attributes.setNamedItem(iAttribute);
         iAttribute := iXml.createAttribute('ATTR_NOTNULL');
-        iAttribute.nodeValue := BoolToStr(table.GetColumnNotNull(i_col));
+        iAttribute.nodeValue := IntToStr(Abs(Integer(table.GetColumnNotNull(i_col))));
         iTableColumn.attributes.setNamedItem(iAttribute);
       end;
 

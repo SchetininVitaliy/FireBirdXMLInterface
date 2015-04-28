@@ -22,10 +22,12 @@ type
   end;
  //------------------------------------------------------------------------------
   TSQLTable = class
+  private
     fTableName:string;
     fTableDescription:string;
     fContentRepresentation: TList;
     fPrimaryKey:TList<integer>;
+  public
     procedure AddColumn(cName:string; cDescription:string; cType:string; len:integer;
                     default:string; notNull:boolean);
     procedure AddRow(row:TStringList);
@@ -34,6 +36,13 @@ type
     function ColumnCount():integer;
     function RowCount():integer;
     function PrimaryKeyColCount():integer;
+    //Modifires
+    procedure SetName( name:string);
+    procedure SetDescription ( description:string);
+    //Table accessors
+    function GetName():string;
+    function GetDescription():string;
+    //Column accessors
     function GetPrimaryKeyCol(i_col:integer):string;
     function GetColumnID(strColumn:string):integer;
     function GetColumnName(id:integer):string;
@@ -87,6 +96,26 @@ implementation
     begin
       Result := 0;
     end;
+   end;
+//------------------------------------------------------------------------------
+   procedure TSQLTable.SetName( name : string);
+   begin
+     fTableName := name;
+   end;
+//------------------------------------------------------------------------------
+   procedure TSQLTable.SetDescription ( description:string);
+   begin
+     fTableDescription := description;
+   end;
+//------------------------------------------------------------------------------
+   function TSQLTable.GetName():string;
+   begin
+     Result := fTableName;
+   end;
+//------------------------------------------------------------------------------
+   function TSQLTable.GetDescription():string;
+   begin
+     Result := fTableDescription;
    end;
 //------------------------------------------------------------------------------
    function TSQLTable.PrimaryKeyColCount():integer;

@@ -79,11 +79,11 @@ type
   end;
 
 // *********************************************************************//
-// The Class CoFireBird2XMLInterface provides a Create and CreateRemote method to          
-// create instances of the default interface IFireBird2XMLInterface exposed by              
-// the CoClass FireBird2XMLInterface. The functions are intended to be used by             
-// clients wishing to automate the CoClass objects exposed by the         
-// server of this typelibrary.                                            
+// The Class CoFireBird2XMLInterface provides a Create and CreateRemote method to
+// create instances of the default interface IFireBird2XMLInterface exposed by
+// the CoClass FireBird2XMLInterface. The functions are intended to be used by
+// clients wishing to automate the CoClass objects exposed by the
+// server of this typelibrary.
 // *********************************************************************//
   CoFireBird2XMLInterface = class
     class function Create: IFireBird2XMLInterface;

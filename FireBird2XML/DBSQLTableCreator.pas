@@ -64,7 +64,7 @@ implementation
    begin
       fDB.Open();
       StrUpcase(tableName);
-      table.fTableName := tableName;
+      table.SetName(tableName);
       //Выборка информации о колокнках таблицы
       transCols := TIBTransaction.Create(nil);
       transCols.DefaultDatabase := fDB;
@@ -96,7 +96,7 @@ implementation
          table.AddColumn(Trim(ibdsCols.FieldByName('column_name').AsString),
                         Trim(ibdsCols.FieldByName('description').AsString),
                         Trim(ibdsCols.FieldByName('data_type').AsString),
-                        Round(ibdsCols.FieldByName('length').AsInteger/4),
+                        Round(ibdsCols.FieldByName('length').AsInteger),
                         Trim(ibdsCols.FieldByName('def').AsString),
                         Boolean(ibdsCols.FieldByName('nullFlag').AsInteger)
                         );
@@ -118,7 +118,7 @@ implementation
                                     'FROM rdb$relations ' +
                                     'WHERE rdb$relation_name = ''' + tableName + ''' ;';
       ibdsTabDesc.Active := true;
-      table.fTableDescription :=  Trim(ibdsTabDesc.FieldByName('description').AsString);
+      table.SetDescription(Trim(ibdsTabDesc.FieldByName('description').AsString));
 
       ibdsTabDesc.Destroy;
       transTabDesc.Destroy;
@@ -255,8 +255,10 @@ implementation
 
         columnStr := columnStr + ' CHARACTER SET WIN1251 ';
 
+        if table.GetColumnNotNull(i_col) then
+           columnStr := columnStr + ' NOT NULL ';
         if table.IsPrimaryColumn(i_col) then
-           columnStr := columnStr + ' NOT NULL PRIMARY KEY ';
+           columnStr := columnStr + ' PRIMARY KEY ';
         if i_col <> table.ColumnCount()-1  then
            columnStr := columnStr + ' , ';
 
@@ -282,7 +284,7 @@ implementation
 
           bytes := TEncoding.UTF8.GetBytes(table.GetColumnDescription(i_col));
 
-          queryColCom.SQL.Text := ' COMMENT ON COLUMN ' + table.fTableName + '.' + table.GetColumnName(i_col) +
+          queryColCom.SQL.Text := ' COMMENT ON COLUMN ' + table.GetName + '.' + table.GetColumnName(i_col) +
                 ' IS '''
                  + table.GetColumnDescription(i_col) + ''' ;';
           Writeln(queryColCom.SQL.Text);
@@ -301,8 +303,8 @@ implementation
 
       transColCom.StartTransaction;
 
-      queryColCom.SQL.Text := ' COMMENT ON TABLE ' + table.fTableName  +
-                                  ' IS ''' + table.fTableDescription + ''' ;';
+      queryColCom.SQL.Text := ' COMMENT ON TABLE ' + table.GetName  +
+                                  ' IS ''' + table.GetDescription + ''' ;';
 
       queryColCom.Active := true;
 
