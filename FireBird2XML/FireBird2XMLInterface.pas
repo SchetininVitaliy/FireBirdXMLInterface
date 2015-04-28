@@ -6,7 +6,7 @@ interface
 
 uses
   Windows, ActiveX, Classes, ComObj, FireBird2XML_TLB, StdVcl,
-  SQLTable, DBSQLTableCreator, XMLSQlTableCreator;
+  SQLTable, DBSQLTableCreator, XMLSQlTableCreator, Dialogs;
 
 type
 //------------------------------------------------------------------------------
@@ -65,6 +65,9 @@ begin
       dbCreator.Destroy;
       sqlTable.Destroy;
     end;
+
+    if (type_<>'import') and (type_<>'export') then
+      ShowMessage('Ошибочный флаг. Выбирите export или import');
 end;
 //------------------------------------------------------------------------------
 function TFireBird2XMLInterface.InitDB(dbName, dbUser, dbPass, dbEncode: PAnsiChar): HResult;
