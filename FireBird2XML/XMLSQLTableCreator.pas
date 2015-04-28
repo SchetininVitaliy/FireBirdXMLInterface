@@ -9,14 +9,16 @@ interface
     xmldom,
     Classes,
     Variants,
-    SysUtils, Dialogs;
+    SysUtils, Dialogs,
+    inifiles;
 type
 //------------------------------------------------------------------------------
   TXMLSQLTableCreator = class(TSQLTableCreator)
     fXMLDocument: IXMLDocument;
 
-    procedure CreateTableFromXML(fileName:string; var table:TSQLTable);
+    procedure CreateTableFromXML(fileName:string; var table:TSQLTable; aliasesFile:string);
     procedure CreateXMLFromTable(fileName:string; table:TSQLTable);
+    procedure AliasePrepare(var table:TSQLTable; aliasesFile:string);
     constructor Create();
     destructor Destroy;
   end;
@@ -33,7 +35,7 @@ implementation
 
   end;
 //------------------------------------------------------------------------------
-  procedure TXMLSQLTableCreator.CreateTableFromXML(fileName:string; var table:TSQLTable);
+  procedure TXMLSQLTableCreator.CreateTableFromXML(fileName:string; var table:TSQLTable; aliasesFile:string);
   var
     i_col, i_row, i_pk_col:integer;
     tableNode: IXMLNode;
@@ -95,7 +97,8 @@ implementation
         row.Destroy;
       end;
      end;
-
+     if aliasesFile <> '' then
+        AliasePrepare(table, aliasesFile);
   end;
 //------------------------------------------------------------------------------
   procedure TXMLSQLTableCreator.CreateXMLFromTable(fileName:string; table:TSQLTable);
@@ -174,8 +177,32 @@ implementation
         row.Destroy;
       end;
 
-
       fXMLDocument.SaveToFile(fileName);
+  end;
+//------------------------------------------------------------------------------
+  procedure TXMLSQLTableCreator.AliasePrepare(var table:TSQLTable; aliasesFile:string);
+  var
+    iniFile : TIniFile;
+    i_col: Integer;
+    colName: string;
+  begin
+    try
+      iniFile := TIniFile.Create(aliasesFile);
+    except
+    on E:Exception do
+    begin
+      ShowMessage(PChar(E.Message));
+      Exit;
+      end;
+    end;
+
+    for i_col := 0 to table.ColumnCount()-1 do
+    begin
+      colName := iniFile.ReadString('Aliases', table.GetColumnName(i_col), '');
+      if colName <> '' then
+        table.SetColumnName(i_col,colName);
+    end;
+    iniFile.Free;
   end;
 //------------------------------------------------------------------------------
 end.

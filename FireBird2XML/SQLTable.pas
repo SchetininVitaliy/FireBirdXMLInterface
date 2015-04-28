@@ -36,9 +36,11 @@ type
     function ColumnCount():integer;
     function RowCount():integer;
     function PrimaryKeyColCount():integer;
-    //Modifires
+    //Table Modifires
     procedure SetName( name:string);
     procedure SetDescription ( description:string);
+    //Column Modifires
+    procedure SetColumnName(i_col:integer; name:string);
     //Table accessors
     function GetName():string;
     function GetDescription():string;
@@ -106,6 +108,14 @@ implementation
    procedure TSQLTable.SetDescription ( description:string);
    begin
      fTableDescription := description;
+   end;
+//------------------------------------------------------------------------------
+   procedure TSQLTable.SetColumnName(i_col:integer; name:string);
+   var
+    column:TSQLTableColumn;
+   begin
+      column := fContentRepresentation[i_col];
+      column.fName := name;
    end;
 //------------------------------------------------------------------------------
    function TSQLTable.GetName():string;

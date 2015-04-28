@@ -35,7 +35,7 @@ begin
     begin
       xmlCreator := TXMLSQLTableCreator.Create();
       sqlTable:=TSQLTable.Create;
-      xmlCreator.CreateTableFromXML(xmlFile,sqlTable);
+      xmlCreator.CreateTableFromXML(xmlFile,sqlTable, aliasFile);
       sqlTable.Print();
       dbCreator := TDBSQLTableCreator.Create(fDBName,
                                               fDBUser,

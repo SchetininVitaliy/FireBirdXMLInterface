@@ -43,3 +43,8 @@ Temporary Items
 .apdisk
 Win32/Debug/Project2.dll
 Win32/Debug/SQLTable.dcu
+*.dcu
+FireBird2XML/__history/DBSQLTableCreator.pas.~1~
+*.~2~
+*.exe
+*.dll
