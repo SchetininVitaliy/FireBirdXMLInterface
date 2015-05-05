@@ -11,18 +11,19 @@ uses
   SQLTable,
   SysUtils,
   Dialogs,
-  Support ;
+  Support, inifiles ;
 type
 //------------------------------------------------------------------------------
   TDBSQLTableCreator = class(TSQLTableCreator)
     private
       fDB : TIBDatabase;
+      procedure AliasePrepare(var table:TSQLTable; aliasesFile:string);
     public
       constructor Create(dbName:string; dbUser:string; dbPass:string;
                           dbCType:string);
       destructor Destroy;
 
-      procedure CreateTableFromDB(tableName:string; var table:TSQLTable);
+      procedure CreateTableFromDB(tableName:string; var table:TSQLTable; aliaseFile:string);
 
       procedure CreateDBTableFromTable(tableName:string; table:TSQLTable);
   end;
@@ -55,7 +56,7 @@ implementation
       fDB.Destroy;
    end;
 //------------------------------------------------------------------------------
-   procedure TDBSQLTableCreator.CreateTableFromDB(tableName:string; var table:TSQLTable);
+   procedure TDBSQLTableCreator.CreateTableFromDB(tableName:string; var table:TSQLTable; aliaseFile:string);
    var
       transCols, transRows, transPrKey, transTabDesc: TIBTransaction;
       ibdsCols,ibdsRows, ibdsPrKey, ibdsTabDesc: TIBDataSet;
@@ -91,6 +92,7 @@ implementation
                           +     'WHEN 12 THEN ''DATE'' '
                           +     'WHEN 13 THEN ''TIME'' '
                           +    'WHEN 35 THEN ''TIMESTAMP'' '
+                          +     'WHEN 261 THEN ''BLOB'' '
                           +    'ELSE ''UNKNOWN'''
                           +  'end as data_type, '
                           +  'f.rdb$field_length as length, '
@@ -179,25 +181,30 @@ implementation
        while not ibdsRows.Eof do begin
           row.Clear;
           for i_col := 0 to ibdsRows.FieldCount - 1 do
-             row.Add(Trim(ibdsRows.Fields[i_col].AsString));
+             row.Add(Trim(ibdsRows.FieldByName(table.GetColumnName(i_col)).AsString));
           table.AddRow(row);
           ibdsRows.Next;
       end;
       ibdsRows.Destroy;
       transRows.Destroy;
       fDB.Close;
+
+      if aliaseFile <> '' then
+        AliasePrepare(table, aliaseFile);
+
    end;
 //------------------------------------------------------------------------------
    procedure TDBSQLTableCreator.CreateDBTableFromTable(tableName:string; table:TSQLTable);
    var
-    transTExist, transCreate,transInsert, transDrop, transColCom: TIBTransaction;
+    transTExist, transCreate,transInsert, transDrop, transColCom, transAddPK: TIBTransaction;
     ibdsTExist,ibdsCreate, ibdsInsert, ibdsDrop: TIBDataSet;
-    queryDrop, queryInsert, queryColCom: TIBQuery;
+    queryDrop, queryInsert, queryColCom, queryAddPK: TIBQuery;
     tableExist: boolean;
     i_col: Integer;
     columnStr, rowStr:string;
     i_row: Integer;
     bytes : TBytes;
+    qStr:string;
    begin
       fDB.Open;
       StrUpcase(tableName);
@@ -256,19 +263,21 @@ implementation
         columnStr := '';
         columnStr := columnStr + table.GetColumnName(i_col) + ' ';
 
-        if table.GetColumnLen(i_col) = 0 then
+        if table.GetColumnType(i_col) <> 'VARCHAR' then
         begin
           columnStr := columnStr + table.GetColumnType(i_col) + ' ';
         end
         else
+        begin
           columnStr := columnStr + table.GetColumnType(i_col) + '(' + IntToStr(table.GetColumnLen(i_col)) + ')';
+          columnStr := columnStr + ' CHARACTER SET WIN1251 ';
+        end;
 
-        columnStr := columnStr + ' CHARACTER SET WIN1251 ';
 
         if table.GetColumnNotNull(i_col) then
            columnStr := columnStr + ' NOT NULL ';
-        if table.IsPrimaryColumn(i_col) then
-           columnStr := columnStr + ' PRIMARY KEY ';
+//        if table.IsPrimaryColumn(i_col) then
+//           columnStr := columnStr + ' PRIMARY KEY ';
         if i_col <> table.ColumnCount()-1  then
            columnStr := columnStr + ' , ';
 
@@ -280,6 +289,29 @@ implementation
 
       ibdsCreate.Destroy;
       transCreate.Destroy;
+
+      //Добавляем первичный ключ
+      transAddPK := TIBTransaction.Create(nil);
+      transAddPK.DefaultDatabase := fDB;
+      queryAddPK := TIBQuery.Create(nil);
+      queryAddPK.Database := fDB;
+      queryAddPK.Transaction := transAddPK;
+
+      transAddPK.StartTransaction;
+      qStr := 'ALTER TABLE ' + tableName +
+                ' ADD CONSTRAINT pk_' + tableName+ ' PRIMARY KEY (';
+      for i_col := 0 to table.ColumnCount-1 do
+      begin
+        if table.IsPrimaryColumn(i_col) then
+          qStr :=  qStr + table.GetColumnName(i_col)+ ',';
+      end;
+      delete(qStr, length(qStr), 1);// удаляем последнюю запятую
+      qStr := qStr + ');';
+      Writeln(qStr);
+      queryAddPK.SQL.Text := qStr;
+      queryAddPK.Active := true;
+      queryAddPK.Destroy;
+      transAddPK.Destroy;
 
       //Добавляем комментарии к колонкам
       for i_col := 0 to table.ColumnCount()-1 do
@@ -349,6 +381,39 @@ implementation
 
 
       fDB.Close;
+   end;
+//------------------------------------------------------------------------------
+   procedure TDBSQLTableCreator.AliasePrepare(var table:TSQLTable; aliasesFile:string);
+   var
+    iniFile : TIniFile;
+    i_col, i_str: Integer;
+    colName: string;
+    values, keys: TStringList;
+   begin
+    try
+      iniFile := TIniFile.Create(aliasesFile);
+    except
+    on E:Exception do
+    begin
+      ShowMessage(PChar(E.Message));
+      Exit;
+      end;
+    end;
+    values := TStringList.Create;
+    keys := TStringList.Create;
+    iniFile.ReadSectionValues('Aliases', values);
+    iniFile.ReadSection('Aliases', keys);
+
+    for i_col := 0 to table.ColumnCount()-1 do
+    begin
+      colName := '';
+      for i_str := 0 to values.Count-1 do
+        if values[i_str] = table.GetColumnName(i_col) then
+          colName := keys[i_str];
+      if colName <> '' then
+        table.SetColumnName(i_col,colName);
+    end;
+    iniFile.Free;
    end;
 //------------------------------------------------------------------------------
 end.

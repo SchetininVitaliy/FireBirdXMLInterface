@@ -14,11 +14,12 @@ interface
 type
 //------------------------------------------------------------------------------
   TXMLSQLTableCreator = class(TSQLTableCreator)
+  private
     fXMLDocument: IXMLDocument;
-
+    procedure AliasePrepare(var table:TSQLTable; aliasesFile:string);
+  public
     procedure CreateTableFromXML(fileName:string; var table:TSQLTable; aliasesFile:string);
     procedure CreateXMLFromTable(fileName:string; table:TSQLTable);
-    procedure AliasePrepare(var table:TSQLTable; aliasesFile:string);
     constructor Create();
     destructor Destroy;
   end;

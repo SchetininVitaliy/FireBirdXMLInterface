@@ -56,7 +56,7 @@ begin
                                               fDBEncode);
 
       sqlTable:=TSQLTable.Create;
-      dbCreator.CreateTableFromDB(tableName,sqlTable);
+      dbCreator.CreateTableFromDB(tableName,sqlTable,aliasFile);
       sqlTable.Print;
       xmlCreator := TXMLSQLTableCreator.Create();
       xmlCreator.CreateXMLFromTable(xmlFile,sqlTable);
